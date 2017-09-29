@@ -4,6 +4,16 @@ project(LSMP CXX)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 #-----------------------------------------------------------------------------
+# Crypto++
+
+list(APPEND CMAKE_MODULE_PATH ${LSMP_SOURCE_DIR}/cmake)
+
+find_package(CryptoPP REQUIRED)
+add_library(cryptopp INTERFACE)
+target_include_directories(cryptopp INTERFACE ${CRYPTOPP_INCLUDE_DIR})
+target_link_libraries(cryptopp INTERFACE ${CRYPTOPP_LIBRARIES})
+
+#-----------------------------------------------------------------------------
 # ASIO
 
 add_library(asio INTERFACE)
