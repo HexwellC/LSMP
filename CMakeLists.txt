@@ -8,10 +8,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 list(APPEND CMAKE_MODULE_PATH ${LSMP_SOURCE_DIR}/cmake)
 
-find_package(CryptoPP REQUIRED)
-add_library(cryptopp INTERFACE)
-target_include_directories(cryptopp INTERFACE ${CRYPTOPP_INCLUDE_DIR})
-target_link_libraries(cryptopp INTERFACE ${CRYPTOPP_LIBRARIES})
+find_package(sodium REQUIRED)
+add_library(libodium INTERFACE)
 
 #-----------------------------------------------------------------------------
 # ASIO
@@ -38,8 +36,8 @@ set(LSMP_HEADERS ${LSMP_CXX_HEADERS} ${LSMP_C_HEADERS})
 set(LSMP_SOURCES ${LSMP_CXX_SOURCES} ${LSMP_C_SOURCES})
 
 add_library(lsmp STATIC ${LSMP_HEADERS} ${LSMP_SOURCES})
-target_include_directories(lsmp PUBLIC ${LSMP_SOURCE_DIR}/src)
-target_link_libraries(lsmp json asio)
+target_include_directories(lsmp PUBLIC ${LSMP_SOURCE_DIR}/src ${sodium_INCLUDE_DIR})
+target_link_libraries(lsmp json asio sodium)
 
 #-----------------------------------------------------------------------------
 # C++ standard
