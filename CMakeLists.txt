@@ -3,28 +3,26 @@ project(LSMP CXX)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-#-----------------------------------------------------------------------------
-# Crypto++
+# Libraries
 
 list(APPEND CMAKE_MODULE_PATH ${LSMP_SOURCE_DIR}/cmake)
 
-find_package(sodium REQUIRED)
-add_library(libodium INTERFACE)
+# libsodium and libgcrypt
 
-#-----------------------------------------------------------------------------
+find_package(sodium REQUIRED)
+find_package(GCrypt REQUIRED)
+
 # ASIO
 
 add_library(asio INTERFACE)
 target_include_directories(asio INTERFACE ${LSMP_SOURCE_DIR}/libs/asio/asio/include)
 target_compile_definitions(asio INTERFACE -DASIO_STANDALONE)
 
-#-----------------------------------------------------------------------------
 # nlohmann/json
 
 add_library(json INTERFACE)
 target_include_directories(json INTERFACE ${LSMP_SOURCE_DIR}/libs/json)
 
-#-----------------------------------------------------------------------------
 # LSMP
 
 file(GLOB_RECURSE LSMP_CXX_SOURCES ${LSMP_SOURCE_DIR}/src/*.cpp)
@@ -36,10 +34,11 @@ set(LSMP_HEADERS ${LSMP_CXX_HEADERS} ${LSMP_C_HEADERS})
 set(LSMP_SOURCES ${LSMP_CXX_SOURCES} ${LSMP_C_SOURCES})
 
 add_library(lsmp STATIC ${LSMP_HEADERS} ${LSMP_SOURCES})
-target_include_directories(lsmp PUBLIC ${LSMP_SOURCE_DIR}/src ${sodium_INCLUDE_DIR})
-target_link_libraries(lsmp json asio sodium)
+target_include_directories(lsmp PUBLIC ${LSMP_SOURCE_DIR}/src
+                           ${sodium_INCLUDE_DIR}
+                           ${GCRYPT_INCLUDE_DIRS})
+target_link_libraries(lsmp json asio sodium gcrypt)
 
-#-----------------------------------------------------------------------------
 # C++ standard
 
 set_property(TARGET lsmp PROPERTY CXX_STANDARD 11)
