@@ -12,7 +12,14 @@ list(APPEND CMAKE_MODULE_PATH ${LSMP_SOURCE_DIR}/cmake)
 find_package(sodium REQUIRED)
 find_package(GCrypt REQUIRED)
 
+add_library(GCrypt INTERFACE)
+target_include_directories(GCrypt INTERFACE ${GCRYPT_INCLUDE_DIRS})
+target_link_libraries(GCrypt INTERFACE ${GCRYPT_LIBRARIES})
+target_compile_definitions(GCrypt INTERFACE ${GCRYPT_DEFINITIONS})
+
 # ASIO
+
+find_package(Threads REQUIRED)
 
 add_library(asio INTERFACE)
 target_include_directories(asio INTERFACE ${LSMP_SOURCE_DIR}/libs/asio/asio/include)
@@ -34,13 +41,11 @@ set(LSMP_HEADERS ${LSMP_CXX_HEADERS} ${LSMP_C_HEADERS})
 set(LSMP_SOURCES ${LSMP_CXX_SOURCES} ${LSMP_C_SOURCES})
 
 add_library(lsmp STATIC ${LSMP_HEADERS} ${LSMP_SOURCES})
-target_include_directories(lsmp PUBLIC ${LSMP_SOURCE_DIR}/src
-                           ${sodium_INCLUDE_DIR}
-                           ${GCRYPT_INCLUDE_DIRS})
-target_link_libraries(lsmp json asio sodium gcrypt)
+target_link_libraries(lsmp json asio sodium gcrypt Threads::Threads)
+target_include_directories(lsmp PUBLIC ${LSMP_SOURCE_DIR}/src)
 
 # C++ standard
 
-set_property(TARGET lsmp PROPERTY CXX_STANDARD 11)
+set_property(TARGET lsmp PROPERTY CXX_STANDARD 17)
 set_property(TARGET lsmp PROPERTY CXX_STANDARD_REQUIRED ON)
 set_property(TARGET lsmp PROPERTY CXX_STANDARD_EXTENSIONS OFF)
