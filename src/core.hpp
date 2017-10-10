@@ -1,5 +1,5 @@
-#ifndef _LSMP_CORE_HPP
-#define _LSMP_CORE_HPP
+#pragma once
+
 #include <sodium.h>
 namespace lsmp {
 /**
@@ -12,4 +12,3 @@ namespace lsmp {
  */
 bool initialize();
 }
-#endif // _LSMP_CORE_HPP

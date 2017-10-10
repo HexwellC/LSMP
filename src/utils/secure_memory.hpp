@@ -1,5 +1,4 @@
-#ifndef LSMP_UTILS_SECURE_MEMORY_HPP
-#define LSMP_UTILS_SECURE_MEMORY_HPP
+#pragma once
 
 #include <cstddef>      // std::size_t, std::ptrdiff_t
 #include <cstdint>      // std::uint8_t, std::uint64_t
@@ -231,4 +230,3 @@ namespace lsmp {
     }
 } // namespace lsmp
 
-#endif // LSMP_UTILS_SECURE_MEMORY_HPP
