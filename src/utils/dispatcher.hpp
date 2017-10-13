@@ -4,8 +4,6 @@
 #include <vector>
 #include <unordered_map>
 
-#include "unpack_and_call.hpp"
-
 namespace lsmp {
     template<typename InputT, typename EventIdT>
     struct no_converter {
@@ -66,8 +64,8 @@ namespace lsmp {
              typename ConverterT = no_converter<InputT, EventIdT>>
     class dispatcher {
     public:
-        static_assert(std::is_same<EventIdT, ConverterT::event_id_t>::value, "Converter is not compatible.");
-        static_assert(std::is_same<InputT, ConverterT::input_type>::value, "Converter is not compatible.");
+        static_assert(std::is_same<EventIdT, typename ConverterT::event_id_t>::value, "Converter is not compatible.");
+        static_assert(std::is_same<InputT, typename ConverterT::input_type>::value, "Converter is not compatible.");
 
         template<EventIdT EventId>
         void add_handler(typename ConverterT::template handler<EventId>::type handler) {
@@ -82,7 +80,7 @@ namespace lsmp {
             for (const auto& any_handler : handlers_it->second) {
                 using handler_type = typename ConverterT::template handler<EventId>::type;
 
-                unpack_and_call(std::any_cast<handler_type>(any_handler), ConverterT::template convert<EventId>(input));
+                std::apply(std::any_cast<handler_type>(any_handler), ConverterT::template convert<EventId>(input));
             }
         }
     private:
